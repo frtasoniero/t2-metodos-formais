@@ -9,11 +9,13 @@
  */
 
 class {:autocontracts} Stack {
+    // Representação concreta da pilha
     var arr: array<int>
     var count: int
 
     ghost var abs: seq<int> // Representação abstrata (topo no final)
 
+    // Representação do estado da pilha
     ghost predicate Valid()
     {
         arr.Length != 0 // Garante que o array não está vazio
@@ -21,6 +23,7 @@ class {:autocontracts} Stack {
         && abs == arr[..count] // abs corresponde ao prefixo concreto
     }
 
+    // Construtor da pilha
     constructor()
         ensures Valid()
         ensures abs == []
@@ -30,6 +33,8 @@ class {:autocontracts} Stack {
         abs := [];
     }
 
+    // Adiciona um elemento ao topo da pilha
+    // Se o array estiver cheio, duplica seu tamanho
     method Push(x: int)
         ensures abs == old(abs) + [x]
     {
@@ -47,6 +52,7 @@ class {:autocontracts} Stack {
         abs := abs + [x];
     }
 
+    // Remove o elemento do topo da pilha e o retorna
     method Pop() returns (x: int)
         requires |abs| > 0
         ensures x == old(abs)[|old(abs)| - 1]
@@ -61,6 +67,7 @@ class {:autocontracts} Stack {
         abs := arr[..count];
     }
 
+    // Lê o elemento do topo da pilha sem removê-lo
     method Peek() returns (x: int)
         requires |abs| > 0
         ensures x == abs[|abs| - 1]
@@ -68,6 +75,7 @@ class {:autocontracts} Stack {
         x := arr[count - 1];
     }
 
+    // Combina duas pilhas, mantendo a ordem dos elementos
     method ConcatenateStacks(other: Stack) returns (result: Stack)
         requires Valid()
         requires other.Valid()
@@ -104,6 +112,7 @@ class {:autocontracts} Stack {
         }
     }
 
+    // Inverte a ordem dos elementos na pilha
     method Reverse()
         requires |abs| > 0
         ensures |abs| == |old(abs)|
@@ -120,12 +129,14 @@ class {:autocontracts} Stack {
         abs := arr[..count];
     }
 
+    // Verifica se a pilha está vazia
     function IsEmpty(): bool
         ensures IsEmpty() <==> |abs| == 0
     {
         count == 0
     }
 
+    // Consulta o numero de elementos na pilha
     function Size(): int
         ensures Size() == |abs|
     {
@@ -137,7 +148,7 @@ method Main()
 {
     var s := new Stack();
     
-    // Teste estado inicial
+    // Teste estado inicial (verifica se a pilha está vazia)
     assert s.IsEmpty();
     assert s.Size() == 0;
     
