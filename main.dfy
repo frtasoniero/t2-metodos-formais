@@ -25,7 +25,7 @@ class {:autocontracts} Stack {
         ensures Valid()
         ensures abs == []
     {
-        arr := new int[5]; // Inicia com array pequeno, pode redimensionar depois
+        arr := new int[5]; // Inicia com array pequeno, duplica o tamanho ao atingir o limite
         count := 0;
         abs := [];
     }
@@ -104,6 +104,22 @@ class {:autocontracts} Stack {
         }
     }
 
+    method Reverse()
+        requires |abs| > 0
+        ensures |abs| == |old(abs)|
+        ensures forall i | 0 <= i < |abs| :: abs[i] == old(abs[|abs| - i - 1])
+    {
+        var b := new int[count];
+
+        forall i | 0 <= i < count
+        {
+            b[i] := arr[count - i - 1];
+        }
+
+        arr := b;
+        abs := arr[..count];
+    }
+
     function IsEmpty(): bool
         ensures IsEmpty() <==> |abs| == 0
     {
@@ -160,4 +176,15 @@ method Main()
     assert s2.Size() == 2; // Pilha original s2 não deve ser alterada
 
     assert combined.abs == [2, 3, 1, 7]; // Combinação correta dos elementos
+
+    // Teste Reverse (inversão da ordem dos elementos)
+    var s3 := new Stack();
+    s3.Push(1);
+    s3.Push(3);
+    s3.Push(6);
+    assert s3.abs == [1, 3, 6];
+
+    s3.Reverse();
+    assert s3.abs == [6, 3, 1]; // Ordem invertida
+    assert s3.Size() == 3; // Tamanho deve permanecer o mesmo
 }
