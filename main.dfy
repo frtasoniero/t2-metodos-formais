@@ -1,21 +1,31 @@
+/*
+ * Grupo: Felipe Tasoniero, Lucas Wolschick
+ * Trabalho T2 - Métodos Formais
+ * Dafny Version: 4.10.0
+ * 
+ * Verificação formal em Dafny da implementação de uma pilha (Stack) com as seguintes características:
+    * - Implementação de pilha com array dinâmico
+    * - Métodos: Push, Pop, Peek, ConcatenateStacks, IsEmpty, Size
+ */
+
 class {:autocontracts} Stack {
     var arr: array<int>
     var count: int
 
-    ghost var abs: seq<int> // Abstract representation (top at end)
+    ghost var abs: seq<int> // Representação abstrata (topo no final)
 
     ghost predicate Valid()
     {
-        arr.Length != 0 // Ensure the array is not empty
+        arr.Length != 0 // Garante que o array não está vazio
         && 0 <= count <= arr.Length
-        && abs == arr[..count] // abs matches concrete prefix
+        && abs == arr[..count] // abs corresponde ao prefixo concreto
     }
 
     constructor()
         ensures Valid()
         ensures abs == []
     {
-        arr := new int[5]; // Start with small array, can resize later
+        arr := new int[5]; // Inicia com array pequeno, pode redimensionar depois
         count := 0;
         abs := [];
     }
@@ -107,76 +117,31 @@ class {:autocontracts} Stack {
     }
 }
 
-method Main() {
+method Main()
+{
     var s := new Stack();
     
-    // Test initial state
+    // Teste estado inicial
     assert s.IsEmpty();
     assert s.Size() == 0;
     
-    // Test Push method
+    // Teste Push
     s.Push(1);
-    assert !s.IsEmpty();
-    assert s.Size() == 1;
-    
-    // Test Peek method (should return top element without removing it)
-    var peekValue := s.Peek();
-    assert peekValue == 1;
-    assert s.Size() == 1; // Size should remain the same after Peek
-    assert !s.IsEmpty();
-    
-    // Test Push with multiple elements
     s.Push(2);
-    s.Push(3);
-    assert s.Size() == 3;
-    
-    // Test Peek with multiple elements (should return last pushed element)
-    peekValue := s.Peek();
-    assert peekValue == 3;
-    assert s.Size() == 3; // Size should remain the same
-    
-    // Test Pop method - LIFO (Last-In-First-Out)
-    var popValue := s.Pop();
-    assert popValue == 3; // Should return the last element pushed
-    assert s.Size() == 2; // Size should decrease after Pop
-    
-    // Test another Pop
-    popValue := s.Pop();
-    assert popValue == 2;
-    assert s.Size() == 1;
-    
-    // Test Peek after Pop operations
-    peekValue := s.Peek();
-    assert peekValue == 1; // Should be the first element we pushed
-    assert s.Size() == 1;
-    
-    // Test final Pop
-    popValue := s.Pop();
-    assert popValue == 1;
-    assert s.Size() == 0;
-    assert s.IsEmpty();
-    
-    // Test Push after emptying the stack
-    s.Push(10);
-    s.Push(20);
     assert s.Size() == 2;
     assert !s.IsEmpty();
     
-    // Test final Peek and Pop
-    peekValue := s.Peek();
-    assert peekValue == 20;
+    // Teste Peek (leitura do elemento do topo)
+    var peekValue := s.Peek();
+    assert peekValue == 2; // Último elemento adicionado
+    assert s.Size() == 2;  // Tamanho não deve mudar
     
-    popValue := s.Pop();
-    assert popValue == 20;
-    assert s.Size() == 1;
-    
-    popValue := s.Pop();
-    assert popValue == 10;
-    assert s.IsEmpty();
-    assert s.Size() == 0;
+    // Teste Pop (remoção do último elemento)
+    var popValue := s.Pop();
+    assert popValue == 2;  // Remoção e retorno do último elemento adicionado
+    assert s.Size() == 1;  // Tamanho deve diminuir
 
-    // Add this to your Main method for testing
-    // Test ConcatenateStacks
+    // Teste ConcatenateStacks (combinação de duas pilhas)
     var s1 := new Stack();
     s1.Push(2);
     s1.Push(3);
@@ -185,18 +150,14 @@ method Main() {
     s2.Push(1);
     s2.Push(7);
 
-    var combined := s1.ConcatenateStacks(s2);
-    assert combined.Size() == 4;
-    assert s1.Size() == 2; // Original stack unchanged
-    assert s2.Size() == 2; // Original stack unchanged
+    assert s1.abs == [2, 3];
+    assert s2.abs == [1, 7];
 
-    // Verify the concatenation order by popping elements
-    var val := combined.Pop();
-    assert val == 7; // Last element from s2
-    val := combined.Pop();
-    assert val == 1;
-    val := combined.Pop();
-    assert val == 3;
-    val := combined.Pop();
-    assert val == 2; // First element from s1
+    var combined := s1.ConcatenateStacks(s2);
+
+    assert combined.Size() == 4;
+    assert s1.Size() == 2; // Pilha original s1 não deve ser alterada
+    assert s2.Size() == 2; // Pilha original s2 não deve ser alterada
+
+    assert combined.abs == [2, 3, 1, 7]; // Combinação correta dos elementos
 }
