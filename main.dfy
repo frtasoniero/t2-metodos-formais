@@ -58,6 +58,42 @@ class {:autocontracts} Stack {
         x := arr[count - 1];
     }
 
+    method ConcatenateStacks(other: Stack) returns (result: Stack)
+        requires Valid()
+        requires other.Valid()
+        ensures result.Valid()
+        ensures result.abs == abs + other.abs
+    {
+        result := new Stack();
+
+        var i:= 0;
+
+        while i < count
+            invariant 0 <= i <= count
+            invariant 0 <= i <= result.count
+            invariant fresh(result.Repr)
+            invariant result.Valid()
+            invariant result.abs == abs[0..i]
+        {
+            var value := arr[i];
+            result.Push(value);
+            i := i + 1;
+        }
+
+        var j := 0;
+        while j < other.count
+            invariant 0 <= j <= other.count
+            invariant 0 <= j <= result.count
+            invariant fresh(result.Repr)
+            invariant result.Valid()
+            invariant result.abs == abs + other.abs[0..j]
+        {
+            var value := other.arr[j];
+            result.Push(value);
+            j := j + 1;
+        }
+    }
+
     function IsEmpty(): bool
         ensures IsEmpty() <==> |abs| == 0
     {
@@ -99,7 +135,7 @@ method Main() {
     assert peekValue == 3;
     assert s.Size() == 3; // Size should remain the same
     
-    // Test Pop method
+    // Test Pop method - LIFO (Last-In-First-Out)
     var popValue := s.Pop();
     assert popValue == 3; // Should return the last element pushed
     assert s.Size() == 2; // Size should decrease after Pop
@@ -139,4 +175,28 @@ method Main() {
     assert s.IsEmpty();
     assert s.Size() == 0;
 
+    // Add this to your Main method for testing
+    // Test ConcatenateStacks
+    var s1 := new Stack();
+    s1.Push(2);
+    s1.Push(3);
+
+    var s2 := new Stack();
+    s2.Push(1);
+    s2.Push(7);
+
+    var combined := s1.ConcatenateStacks(s2);
+    assert combined.Size() == 4;
+    assert s1.Size() == 2; // Original stack unchanged
+    assert s2.Size() == 2; // Original stack unchanged
+
+    // Verify the concatenation order by popping elements
+    var val := combined.Pop();
+    assert val == 7; // Last element from s2
+    val := combined.Pop();
+    assert val == 1;
+    val := combined.Pop();
+    assert val == 3;
+    val := combined.Pop();
+    assert val == 2; // First element from s1
 }
