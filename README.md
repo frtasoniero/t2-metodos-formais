@@ -1,33 +1,98 @@
-# Assignment 2
+# Formal Methods – Project 2
 
-The grade for this assignment consists of the work specified here, whose objective is to build formal specifications and verifications in the Dafny language for algorithms on data structures. The assignment will be carried out in groups of up to 5 students. The work must be submitted via Moodle by the date indicated in the submission area according to the course schedule. The group must submit a (.dfy) file containing all the source code in Dafny and the names of all group members.
+## 📝 Project Title
 
-## Instructions
+> **Formal Specification and Verification of the Stack Data Structure in Dafny**
 
-We are interested in implementing the abstract data type Stack (with no size limit) through a concrete implementation using arrays. Note that the use of arrays is mandatory in all operations of the concrete implementation!
+## 🎯 Objective
 
-To do this, you will need to create a Stack class in Dafny and represent the attributes, methods, functions, and predicates according to the following instructions. For simplification, consider the declaration of Stacks containing integers and do not worry about implementing a generic collection.
+Develop **formal specifications** and **verifications** in **Dafny** for algorithms using data structures.
+You must implement and formally verify the abstract data type **Stack** using **arrays** in all concrete implementations.
 
-Abstract representation (via ghost):
+## 📥 Submission Guidelines
 
-- Represent the collection of stack elements.
-- Represent any other information relevant for the correct verification of the implementation.
+* **What to Submit:**
 
-Class invariant (via predicate):
+  * `.dfy` file containing all Dafny source code
+  * Names of all group members
 
-- Use an appropriate Valid() predicate for the invariant of the abstract representation associated with the stack collection.
+## 📋 Problem Statement
 
-Operations:
+You are to implement the **Stack** abstract data type (without size limit), using a concrete implementation with **arrays** (arrays are required for all operations!).
 
-- Constructor must instantiate an empty stack.
-- Add a new element to the top of the stack.
-- Remove an element from the top of the stack, if it is not empty.
-- Read the value at the top of the stack, without removing it, if the stack is not empty.
-- Check whether the stack is empty or not.
-- Query the number of elements stored in the stack.
-- Reverse the order of the elements in the stack.
-- Stack one stack on top of another, returning a new stack, without changing the stacks provided as arguments.
+Your Dafny implementation should include:
 
-All preconditions, postconditions, invariants, and variants must be correctly specified. Part of the evaluation of the assignment is the complete understanding of which assertions should be part of the specification of the requested operations on the data structure.
+### 1️⃣ Abstract Representation (using `ghost`)
 
-Finally, build a small “Main” method demonstrating the use of the implemented operations and verifying assertions (in the style of unit tests) for a number of cases that ensure
+* Represent the stack's elements collection
+* Represent any other information necessary for correct verification
+
+### 2️⃣ Class Invariant (using `predicate`)
+
+* Use a suitable `Valid()` predicate for the class invariant, associated with the stack's abstract representation
+
+### 3️⃣ Required Operations
+
+Implement the following methods:
+
+* **Constructor:** Create an empty stack
+* **Push:** Add a new element at the top
+* **Pop:** Remove the top element (if not empty)
+* **Peek:** View the top element without removing (if not empty)
+* **IsEmpty:** Check if the stack is empty
+* **Size:** Return the number of elements in the stack
+* **Reverse:** Reverse the stack elements order
+* **Stack Over Another:** Combine two stacks (returns a new stack, does not alter originals)
+
+> ⚡️ **Tip:** Every operation must have correct preconditions, postconditions, invariants, and variants!
+
+## 🧪 Main Method Requirement
+
+* Implement a `Main` method demonstrating all operations above
+* Use **assertions** (unit test style) to guarantee coverage for typical and edge cases
+
+## 🗒️ Notes After Project Review
+
+  - **Model/Invariant:** self-contract
+
+  - **Constructor:**
+
+     * **Implementation:** ok
+     * **Validation:** ok
+
+  - **Add (Push):**
+
+     * **Implementation:** ok
+     * **Validation:** ok
+
+  - **Remove (Pop):**
+
+     * **Implementation:** ok
+     * **Validation:** ok
+
+  - **Top (Peek):** does not guarantee stack immutability
+
+     * **Implementation:** ok
+     * **Validation:** ok
+
+  - **IsEmpty:**
+
+     * **Implementation:** ok
+     * **Validation:** ok
+
+  - **Size:**
+
+     * **Implementation:** ok
+     * **Validation:** ok
+
+  - **Reverse:**
+
+     * **Implementation:** ok
+     * **Validation:** ok
+
+  - **Stack Over Another:** does not guarantee immutability of argument stacks
+
+     * **Implementation:** ok
+     * **Validation:** ok
+
+  - **Main:** ok
