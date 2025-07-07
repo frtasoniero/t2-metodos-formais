@@ -5,7 +5,7 @@
  * 
  * Verificação formal em Dafny da implementação de uma pilha (Stack) com as seguintes características:
     * - Implementação de pilha com array dinâmico
-    * - Métodos: Push, Pop, Peek, ConcatenateStacks, IsEmpty, Size
+    * - Métodos: Push, Pop, Peek, ConcatenateStacks, Reverse, IsEmpty, Size
  */
 
 class {:autocontracts} Stack {
